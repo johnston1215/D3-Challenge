@@ -69,7 +69,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = "Obesity %:";
   }
   else {
-    label = "Smokes %:";
+    label = "Smokers %:";
   }
 
   var toolTip = d3.tip()
@@ -82,10 +82,10 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   circlesGroup.call(toolTip);
 
   circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
+    toolTip.show(data, this);
   })
     // onmouseout event
-    .on("mouseout", function(data, index) {
+    .on("mouseout", function(data) {
       toolTip.hide(data);
     });
 
@@ -101,6 +101,7 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
     data.obesity = +data.obesity;
     data.income = +data.income;
     data.smokes = +data.smokes;
+    data.abbr = +data.abbr;
   });
 
   // xLinearScale function above csv import
