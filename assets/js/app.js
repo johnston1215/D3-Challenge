@@ -93,7 +93,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 }
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("./data/data.csv").then(function(healthData, err) {
+d3.csv("./assets/data/data.csv").then(function(healthData, err) {
   if (err) throw err;
 
   // parse data
@@ -152,7 +152,7 @@ d3.csv("./data/data.csv").then(function(healthData, err) {
     .attr("y", 40)
     .attr("value", "smokes") // value to grab for event listener
     .classed("inactive", true)
-    .text("# of Albums Released");
+    .text("Smokers (%)");
 
   // append y axis
   chartGroup.append("text")
@@ -208,6 +208,6 @@ d3.csv("./data/data.csv").then(function(healthData, err) {
         }
       }
     });
-});//.catch(function(error) {
-  //console.log(error);
-//});
+}).catch(function(error) {
+  console.log(error);
+});
