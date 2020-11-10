@@ -177,14 +177,12 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
   // x axis labels event listener
   labelsGroup.selectAll("text")
     .on("click", function() {
-     console.log("click") // get value of selection
       var value = d3.select(this).attr("value");
       if (value !== chosenXAxis) {
 
         // replaces chosenXAxis with value
         chosenXAxis = value;
 
-        // functions here found above csv import
         // updates x scale for new data
         xLinearScale = xScale(healthData, chosenXAxis);
 
@@ -217,5 +215,5 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
       }
     });
 }).catch(function(error) {
-//   console.log(error);     ------------------Error if uncommented
+  console.log(error);
 });
