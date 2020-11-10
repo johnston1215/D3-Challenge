@@ -50,7 +50,12 @@ function renderAxes(newXScale, xAxis) {
 
 // function used for updating circles group with a transition to new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
-  circlesGroup.transition()
+  circlesGroup.selectAll("text")
+    .transition()
+    .duration(1000)
+    .attr("dx", d => newXScale(d[chosenXAxis])-10);
+  circlesGroup.selectAll("circle")
+    .transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]));
   return circlesGroup;
@@ -120,10 +125,10 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
   chartGroup.append("g")
     .call(leftAxis);
 
-  // append initial circles --------------------------------------------------Chart responsive but text doesn't work
-  var circlesGroup = chartGroup.selectAll("circle")
-    .data(healthData)
-    .enter()
+  // append initial circles
+  var circlesGroup = chartGroup.selectAll("circle").data(healthData).enter();
+  circlesGroup = circlesGroup.append("g")
+  circlesGroup
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.income))
@@ -132,36 +137,14 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
     .attr("opacity", ".5")
 
   // append text in circles
-  chartGroup.selectAll("circle")
-    .data(healthData)
-    .enter()
+  circlesGroup
     .append("text")
     .text(function (d) {
-        return d.abbr 
-    })
-    .attr("dx", d => xLinearScale(d[chosenXAxis]))
-    .attr("dy", d => yLinearScale(d.income));
+      return d.abbr 
+  })
+    .attr("dx", d => xLinearScale(d[chosenXAxis])-10)
+    .attr("dy", d => yLinearScale(d.income)+5);
 
-//       // append initial circles --------------------------------------------------Text works but charts don't respond
-//   var circlesGroup = chartGroup.selectAll("circle").data(healthData).enter();
-//   circlesGroup
-//     .append("circle")
-//     .attr("cx", d => xLinearScale(d[chosenXAxis]))
-//     .attr("cy", d => yLinearScale(d.income))
-//     .attr("r", 20)
-//     .attr("fill", "blue")
-//     .attr("opacity", ".5")
-
-// // append text in circles
-//   circlesGroup
-//   .append("text")
-//   .text(function (d) {
-//       return d.abbr 
-//   })
-//   .attr("dx", d => xLinearScale(d[chosenXAxis]))
-//   .attr("dy", d => yLinearScale(d.income));
-
-  // Create group for two x-axis labels ------------------------------------------Resume code
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
@@ -186,15 +169,15 @@ d3.csv("./assets/data/data.csv").then(function(healthData, err) {
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .classed("axis-text", true)
-    .text("Income (%)");
+    .text("Income ($)");
 
   // updateToolTip function above csv import
-  var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+  updateToolTip(chosenXAxis, circlesGroup);
 
   // x axis labels event listener
   labelsGroup.selectAll("text")
     .on("click", function() {
-      // get value of selection
+     console.log("click") // get value of selection
       var value = d3.select(this).attr("value");
       if (value !== chosenXAxis) {
 
